@@ -1,14 +1,17 @@
 import { ColorModeScript } from '@chakra-ui/react';
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import * as serviceWorker from './serviceWorker';
+import theme from './theme/theme';
 
 ReactDOM.render(
   <StrictMode>
-    <ColorModeScript />
-    <App />
+    <Router>
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+      <App />
+    </Router>
   </StrictMode>,
   document.getElementById('root')
 );
@@ -16,7 +19,7 @@ ReactDOM.render(
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://cra.link/PWA
-serviceWorker.unregister();
+// serviceWorker.unregister();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

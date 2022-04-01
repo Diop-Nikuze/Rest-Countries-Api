@@ -1,40 +1,71 @@
-import React from 'react';
-import {
-  ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
-  theme,
-} from '@chakra-ui/react';
-import { ColorModeSwitcher } from './ColorModeSwitcher';
-import { Logo } from './Logo';
+import { useEffect, useState } from 'react';
+import { ChakraProvider } from '@chakra-ui/react';
+import { Routes, Route } from 'react-router-dom';
+
+import Header from './components/Header/Header';
+import CountryDetails from './components/CountriesDetails/CountryDetails';
+import Home from './components/Home/Home';
+
+import '@fontsource/nunito-sans/300.css';
+import '@fontsource/nunito-sans/600.css';
+import '@fontsource/nunito-sans/800.css';
+
+import theme from './theme/theme';
+import axios from 'axios';
+import Footer from './components/Footer/Footer';
 
 function App() {
+  const [countries, setCountries] = useState([]);
+  const [search, setSearch] = useState('');
+  const [filterByRegion, setFilterByRegion] = useState(countries);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios.get('https://restcountries.com/v2/all').then(res => {
+      setCountries(res.data);
+      setFilterByRegion(res.data);
+      setLoading(false);
+    });
+  }, []);
+
+  const onChangeInput = e => {
+    setSearch(e.target.value);
+    setFilterByRegion(countries);
+  };
+
+  const onFilterByRegion = region => {
+    if (region === 'All') setFilterByRegion(countries);
+    else {
+      const filteredRegion = countries.filter(country => {
+        return country.region.toLowerCase().includes(region.toLowerCase());
+      });
+      setFilterByRegion(filteredRegion);
+      setSearch('');
+    }
+  };
+
   return (
     <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
-        <Grid minH="100vh" p={3}>
-          <ColorModeSwitcher justifySelf="flex-end" />
-          <VStack spacing={8}>
-            <Logo h="40vmin" pointerEvents="none" />
-            <Text>
-              Edit <Code fontSize="xl">src/App.js</Code> and save to reload.
-            </Text>
-            <Link
-              color="teal.500"
-              href="https://chakra-ui.com"
-              fontSize="2xl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn Chakra
-            </Link>
-          </VStack>
-        </Grid>
-      </Box>
+      <Header />
+      <Routes>
+        <Route
+          exact
+          path="/"
+          element={
+            <Home
+              onChangeInput={onChangeInput}
+              search={search}
+              filterByRegion={filterByRegion}
+              onChangeRegion={onFilterByRegion}
+              countries={filterByRegion}
+              loading={loading}
+            />
+          }
+        />
+
+        <Route path="/details/:name" element={<CountryDetails />} />
+      </Routes>
+      <Footer />
     </ChakraProvider>
   );
 }
