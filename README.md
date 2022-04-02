@@ -18,3 +18,15 @@ Users should be able to:
 - ReactJS
 - React-Router-Dom
 - Chakra UI
+
+## Things to do as soon as possible :
+
+It seems that the rest API [(https://restcountries.com/v2/all)] has been modified with [(https://countrylayer.com)] which may cause some errors, but soon I will try to make requests with it.
+
+1. Put a loading message before the data is displayed
+
+2. Stylization problem in the Details page especially ( congo, Korea, Tanzania )
+
+3. The possibility to click on the bordering country and to display the details of this last one
+
+I'll try to fix it as soon as possible !
